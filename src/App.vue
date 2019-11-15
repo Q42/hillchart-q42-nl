@@ -1,17 +1,23 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p class="pretitle1">stay ahead of the curve with</p>
+    <HelloWorld msg="The Amazing Hill Chart Drawing Tool"/>
+    <HillChart :progress=42 />
+    <!-- <img class="logo" src="http://logo.q42.com/q42-logo.svg" width="42" /> -->
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import HillChart from './components/HillChart'
+
+document.title = "The Amazing Hill Chart Drawing Tool";
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    HelloWorld,
+    HillChart
   }
 }
 </script>
@@ -25,4 +31,19 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+/* .logo {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateY(-50%);
+} */
+
+.pretitle1 {
+  font-size: 120%;
+}
+
+.pretitle2 {
+  font-size: 130%;
+}
+
 </style>
