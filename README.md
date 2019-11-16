@@ -1,5 +1,7 @@
 # hillchart
 
+<img width=400 src=https://user-images.githubusercontent.com/461650/68992019-de266a00-0865-11ea-9efc-1f060ff6dfd2.png />
+
 ## Project setup
 ```
 yarn install
