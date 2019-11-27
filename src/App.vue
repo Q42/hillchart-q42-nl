@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import HillChart from './components/HillChart'
 
 document.title = "The Amazing Hill Chart Drawing Tool";
@@ -16,7 +15,6 @@ document.title = "The Amazing Hill Chart Drawing Tool";
 export default {
   name: 'app',
   components: {
-    HelloWorld,
     HillChart
   }
 }
