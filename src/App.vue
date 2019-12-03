@@ -5,6 +5,7 @@
       <h1>{{title}}</h1>
     </div>
     <HillChart :progress=42 />
+    <a href="https://github.com/Q42/hillchart-q42-nl">github</a>
   </div>
 </template>
 
