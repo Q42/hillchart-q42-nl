@@ -8,14 +8,15 @@
     </transition>
     <div id="container">
       <p>Click to copy</p>
-      <canvas id="hillchart" @mousemove="doDrag" @click="copyToClipBoard"></canvas>
+      <canvas id="hillchart" @mousemove="(e) => doDrag(e)" @click="copyToClipBoard"></canvas>
     </div>
   </div>
 </template>
 
 <script>
-const cross = new Image();
-cross.src = "cross.png"
+const cyclist = new Image();
+
+
 export default  {
   props: {
     progress: Number
@@ -23,16 +24,24 @@ export default  {
   data() {
     return  { showCopy: false };
   },
-  mounted() {
-    drawHillChart2(this.$props.progress/100);
+  async mounted() {
+    this.canvas = document.querySelector('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    const def = new Promise(function(resolve){
+      cyclist.onload =function() { resolve(cyclist); };
+    });
+    cyclist.src = "cyclist.png"
+    const cyclistLoaded = await def;
+
+    this.drawHillChart2(this.$props.progress/100);
   },
 
   methods: {
-    doDrag(e) {
+    doDrag (e)  {
       const rect = e.target.getBoundingClientRect();
       const dx = e.clientX - rect.left;
       const p = Math.min(1, Math.max(0, dx / rect.width));
-      drawHillChart2(p)
+      this.drawHillChart2(p)
     },
     
     async copyToClipBoard() {
@@ -49,39 +58,53 @@ export default  {
       const image = document.getElementById("copy");
       image.src = URL.createObjectURL(blob);
       setTimeout(()=> this.showCopy = false, 1000 );
-    }
-  },
-}
-
-function drawHillChart2(progress) {
-  const canvas = document.querySelector('canvas');
-  const ctx = canvas.getContext('2d');
+    },
   
-  canvas.width = canvas.width;
-  const angleOffset = 45; // we don't start and end | but / and \
-  const startAngle = -180+angleOffset;
-  const endAngle = - angleOffset
-  const angularDiffOfTotal = endAngle - startAngle;
-  const doneArc = startAngle + progress * angularDiffOfTotal;
+    drawHillChart2(progress) {
+      this.canvas.width = this.canvas.width;
+      const angleOffset = 45; // we don't start and end | but / and \
+      const startAngle = -180+angleOffset;
+      const endAngle = - angleOffset
+      const angularDiffOfTotal = endAngle - startAngle;
+      const doneArc = startAngle + progress * angularDiffOfTotal;
 
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  const x = 150;
-  const y = 240;
-  const r = 210;
-  ctx.arc(x, y, r, startAngle/180*Math.PI, doneArc/180*Math.PI , false );
-  ctx.stroke();
+      this.ctx.lineWidth = 2;
+      this.ctx.beginPath();
+      
+      // define the imaginary circle for defining the arcs on
+      const x = 150;
+      const y = 240;
+      const r = 200;
+      this.ctx.arc(x, y, r, startAngle/180*Math.PI, doneArc/180*Math.PI , false );
+      this.ctx.stroke();
 
-  ctx.strokeStyle = "lightgrey";
-  ctx.beginPath();
-  ctx.arc(x, y, r, doneArc/180*Math.PI, endAngle/180*Math.PI , false );
-  ctx.stroke();
+      this.ctx.strokeStyle = "lightgrey";
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, r, doneArc/180*Math.PI, endAngle/180*Math.PI , false );
+      this.ctx.stroke();
 
-  const crossPoint = polarToCartesian(x, y, r, doneArc+90);
-  const dx = cross.width/4;
-  const dy = cross.height/4;
-  ctx.drawImage(cross, crossPoint.x-dx/2, crossPoint.y-dy/2, dx, dy)
+      // the icon should be ontop of the arc so r is bigger
+      const icon = polarToCartesian(x, y, r+30, doneArc+90);
+      this.drawImage(icon, (90+doneArc)/180*Math.PI)
+    },
+    drawImage(point, angleInRadians) {
+      const dx = cyclist.width/2;
+      const dy = cyclist.height/2;
+      const x = point.x-dx/2;
+      const y = point.y-dy/2;
+      
+      // this.ctx.drawImage(cyclist, x, y, dx, dy)
+
+      this.ctx.translate(x+dx/2, y+dy/2);
+      this.ctx.rotate(angleInRadians);
+      this.ctx.drawImage(cyclist, -dx/2, 0, dx, dy)
+      this.ctx.rotate(-angleInRadians);
+      this.ctx.translate(-x-dx/2, -y-dy/2);
+    }
+  }
 }
+
+
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;

@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "firebase deploy --only hosting"
   },
   "dependencies": {
     "core-js": "^3.3.2",
@@ -31,14 +32,14 @@
     ],
     "rules": {
       "no-console": 0,
-      "no-unused-vars" :0,
+      "no-unused-vars": 0,
       "no-self-assign": 0
     },
     "parserOptions": {
       "parser": "babel-eslint"
     },
     "globals": {
-      "ClipboardItem" : "readonly"
+      "ClipboardItem": "readonly"
     }
   },
   "postcss": {
