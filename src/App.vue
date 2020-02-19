@@ -6,6 +6,8 @@
     </div>
     <HillChart :progress="42" />
     <a href="https://github.com/Q42/hillchart-q42-nl">github</a>
+
+    <img class="q42-logo" src="http://logo.q42.com/q42-logo.svg" />
   </div>
 </template>
 
@@ -46,5 +48,13 @@ export default {
 
 h3 {
   margin: 40px 0 0;
+}
+
+.q42-logo {
+  width: 42px;
+  position: absolute;
+  bottom: 42px;
+  transform: translate3d(-50%, 0, 0);
+  left: 50%;
 }
 </style>
