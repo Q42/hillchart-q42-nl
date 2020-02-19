@@ -164,6 +164,11 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   width: 400px;
   height: 200px;
 }
+
+#hillchart:hover {
+  cursor: grab;
+}
+
 #container {
   position: absolute;
   top: 50%;

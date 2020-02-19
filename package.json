@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "predeploy": "npm run build",
-    "deploy": "firebase deploy --only hosting"
+    "deploy": "firebase deploy --only hosting",
+    "release:patch": "git checkout develop && npm version patch"
   },
   "dependencies": {
     "core-js": "^3.3.2",
