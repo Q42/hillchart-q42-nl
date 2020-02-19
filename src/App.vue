@@ -2,28 +2,28 @@
   <div id="app">
     <p class="pretitle1">stay ahead of the curve with</p>
     <div>
-      <h1>{{title}}</h1>
+      <h1>{{ title }}</h1>
     </div>
-    <HillChart :progress=42 />
+    <HillChart :progress="42" />
     <a href="https://github.com/Q42/hillchart-q42-nl">github</a>
   </div>
 </template>
 
 <script>
-import HillChart from './components/HillChart'
+import HillChart from './components/HillChart';
 
 export default {
   name: 'app',
   components: {
     HillChart
   },
-  data() { 
-    return { title: "The Amazing Hill Chart Drawing Tool" }  
+  data() {
+    return { title: 'The Amazing Hill Chart Drawing Tool' };
   },
   mounted() {
     document.title = this.title;
   }
-}
+};
 </script>
 
 <style>
