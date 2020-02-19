@@ -18,7 +18,22 @@
 </template>
 
 <script>
-const cyclist = new Image();
+// define the imaginary circle for defining the arcs on
+const circle = {
+  x: 150,
+  y: 240,
+  r: 200
+};
+
+function loadImage(url) {
+  return new Promise(function(resolve) {
+    const image = new Image();
+    image.onload = function() {
+      resolve(image);
+    };
+    image.src = url;
+  });
+}
 
 export default {
   props: {
@@ -30,13 +45,9 @@ export default {
   async mounted() {
     this.canvas = document.querySelector('canvas');
     this.ctx = this.canvas.getContext('2d');
-    const def = new Promise(function(resolve) {
-      cyclist.onload = function() {
-        resolve(cyclist);
-      };
-    });
-    cyclist.src = 'cyclist.png';
-    const cyclistLoaded = await def;
+
+    this.cyclist = loadImage('cyclist.png');
+    this.award = loadImage('award.png');
 
     this.drawHillChart2(this.$props.progress / 100);
   },
@@ -61,60 +72,73 @@ export default {
       setTimeout(() => (this.showCopy = false), 1000);
     },
 
-    drawHillChart2(progress) {
-      this.canvas.width = this.canvas.width;
+    async drawHillChart2(progress) {
+      this.canvas.width = this.canvas.width; // this resets the canvas
       const angleOffset = 45; // we don't start and end | but / and \
       const startAngle = -180 + angleOffset;
       const endAngle = -angleOffset;
       const angularDiffOfTotal = endAngle - startAngle;
-      const doneArc = startAngle + progress * angularDiffOfTotal;
+      const doneAngle = startAngle + progress * angularDiffOfTotal;
 
-      this.ctx.lineWidth = 2;
-      this.ctx.beginPath();
+      this.drawArc(startAngle, doneAngle, '#000');
+      this.drawArc(doneAngle, endAngle, 'lightgrey');
 
-      // define the imaginary circle for defining the arcs on
-      const x = 150;
-      const y = 240;
-      const r = 200;
-      this.ctx.arc(
-        x,
-        y,
-        r,
-        (startAngle / 180) * Math.PI,
-        (doneArc / 180) * Math.PI,
-        false
-      );
-      this.ctx.stroke();
-
-      this.ctx.strokeStyle = 'lightgrey';
-      this.ctx.beginPath();
-      this.ctx.arc(
-        x,
-        y,
-        r,
-        (doneArc / 180) * Math.PI,
-        (endAngle / 180) * Math.PI,
-        false
-      );
-      this.ctx.stroke();
-
+      const cyclist = await this.cyclist;
       // the icon should be ontop of the arc so r is bigger
-      const icon = polarToCartesian(x, y, r + 30, doneArc + 90);
-      this.drawImage(icon, ((90 + doneArc) / 180) * Math.PI);
+      const point = polarToCartesian(
+        circle.x,
+        circle.y,
+        circle.r + 30,
+        doneAngle + 90
+      );
+      const angle = ((90 + doneAngle) / 180) * Math.PI;
+      this.drawMarker(cyclist, point, angle);
+
+      if (progress > 0.9) {
+        this.drawAward();
+      }
     },
-    drawImage(point, angleInRadians) {
-      const dx = cyclist.width / 2;
-      const dy = cyclist.height / 2;
+
+    drawArc(a1, a2, style) {
+      this.ctx.lineWidth = 2;
+      this.ctx.strokeStyle = style;
+      this.ctx.beginPath();
+      this.ctx.arc(
+        circle.x,
+        circle.y,
+        circle.r,
+        (a1 / 180) * Math.PI,
+        (a2 / 180) * Math.PI,
+        false
+      );
+      this.ctx.stroke();
+    },
+    drawMarker(marker, point, angleInRadians) {
+      const dx = marker.width / 2;
+      const dy = marker.height / 2;
       const x = point.x - dx / 2;
       const y = point.y - dy / 2;
 
-      // this.ctx.drawImage(cyclist, x, y, dx, dy)
-
       this.ctx.translate(x + dx / 2, y + dy / 2);
       this.ctx.rotate(angleInRadians);
-      this.ctx.drawImage(cyclist, -dx / 2, 0, dx, dy);
+      this.ctx.drawImage(marker, -dx / 2, 0, dx, dy);
       this.ctx.rotate(-angleInRadians);
       this.ctx.translate(-x - dx / 2, -y - dy / 2);
+    },
+
+    async drawAward() {
+      // fade out chart
+      this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      const award = await this.award;
+      this.ctx.drawImage(
+        award,
+        this.canvas.width / 2 - award.width / 8,
+        0,
+        award.width / 4,
+        award.height / 4
+      );
     }
   }
 };
