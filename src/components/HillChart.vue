@@ -7,7 +7,7 @@
       </div>
     </transition>
     <div id="container">
-      <p>Click to copy</p>
+      <p class="copy">Click to copy</p>
       <canvas
         id="hillchart"
         @mousemove="e => doDrag(e)"
@@ -174,7 +174,19 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
+  color: grey;
 }
+
+#container .copy {
+  opacity: 0;
+  transition: opacity 0.2s linear;
+  transition-delay: 0.5s;
+}
+
+#container:hover .copy {
+  opacity: 1;
+}
+
 path {
   user-select: none;
   pointer-events: none;
@@ -190,7 +202,6 @@ path {
   transform: translate3d(-50%, -50%, 0);
   background: #ffd;
   padding: 10px;
-  /* border: dashed; */
 }
 
 .popup-fade-enter-active {
