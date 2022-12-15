@@ -1,26 +1,14 @@
-# hillchart
+# The Amazing Hillchart Drawing Tool
 
-<img width=400 src=https://user-images.githubusercontent.com/461650/68992019-de266a00-0865-11ea-9efc-1f060ff6dfd2.png />
+Live at [https://hillchart.q42.nl](https://hillchart.q42.nl)
 
-## Project setup
-```
-yarn install
-```
+## Preview
+<img width=400 src=https://user-images.githubusercontent.com/461650/207951032-45dacc62-6b94-42fa-ae9e-b62423524c75.png />
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## Usage
 
-### Lints and fixes files
-```
-yarn lint
-```
+1. Point at a spot on the curve
+2. click to copy to the clipboard
+3. paste it where you want it (we use Trello ourselves)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
